@@ -10,24 +10,23 @@ import android.view.View.OnClickListener;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.demo.model.Response;
 import com.bluelinelabs.logansquare.demo.parsetasks.GsonParser;
-import com.bluelinelabs.logansquare.demo.parsetasks.JacksonDatabindParser;
+import com.bluelinelabs.logansquare.demo.parsetasks.JacksonJrParser;
 import com.bluelinelabs.logansquare.demo.parsetasks.LoganSquareParser;
 import com.bluelinelabs.logansquare.demo.parsetasks.MoshiParser;
 import com.bluelinelabs.logansquare.demo.parsetasks.ParseResult;
 import com.bluelinelabs.logansquare.demo.parsetasks.Parser;
 import com.bluelinelabs.logansquare.demo.parsetasks.Parser.ParseListener;
 import com.bluelinelabs.logansquare.demo.serializetasks.GsonSerializer;
-import com.bluelinelabs.logansquare.demo.serializetasks.JacksonDatabindSerializer;
+import com.bluelinelabs.logansquare.demo.serializetasks.JacksonJrSerializer;
 import com.bluelinelabs.logansquare.demo.serializetasks.LoganSquareSerializer;
 import com.bluelinelabs.logansquare.demo.serializetasks.MoshiSerializer;
 import com.bluelinelabs.logansquare.demo.serializetasks.SerializeResult;
 import com.bluelinelabs.logansquare.demo.serializetasks.Serializer;
 import com.bluelinelabs.logansquare.demo.serializetasks.Serializer.SerializeListener;
 import com.bluelinelabs.logansquare.demo.widget.BarChart;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-
 import com.squareup.moshi.Moshi;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -67,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
         mResponsesToSerialize = getResponsesToParse();
 
         mBarChart = (BarChart)findViewById(R.id.bar_chart);
-        mBarChart.setColumnTitles(new String[] {"GSON", "Jackson", "LoganSquare", "Moshi"});
+        mBarChart.setColumnTitles(new String[] {"GSON", "JacksonJr", "LoganSquare", "Moshi"});
 
         findViewById(R.id.btn_parse_tests).setOnClickListener(new OnClickListener() {
             @Override
@@ -89,15 +88,15 @@ public class MainActivity extends ActionBarActivity {
         mBarChart.setSections(new String[] {"Parse 60 items", "Parse 20 items", "Parse 7 items", "Parse 2 items"});
 
         Gson gson = new Gson();
-        ObjectMapper objectMapper = new ObjectMapper();
         Moshi moshi = new Moshi.Builder().build();
         List<Parser> parsers = new ArrayList<>();
         for (String jsonString : mJsonStringsToParse) {
             for (int iteration = 0; iteration < ITERATIONS; iteration++) {
                 parsers.add(new GsonParser(mParseListener, jsonString, gson));
-                parsers.add(new JacksonDatabindParser(mParseListener, jsonString, objectMapper));
+                parsers.add(new JacksonJrParser(mParseListener, jsonString));
                 parsers.add(new MoshiParser(mParseListener, jsonString, moshi));
                 parsers.add(new LoganSquareParser(mParseListener, jsonString));
+
             }
         }
 
@@ -111,15 +110,15 @@ public class MainActivity extends ActionBarActivity {
         mBarChart.setSections(new String[] {"Serialize 60 items", "Serialize 20 items", "Serialize 7 items", "Serialize 2 items"});
 
         Gson gson = new Gson();
-        ObjectMapper objectMapper = new ObjectMapper();
         Moshi moshi = new Moshi.Builder().build();
         List<Serializer> serializers = new ArrayList<>();
         for (Response response : mResponsesToSerialize) {
             for (int iteration = 0; iteration < ITERATIONS; iteration++) {
                 serializers.add(new GsonSerializer(mSerializeListener, response, gson));
-                serializers.add(new JacksonDatabindSerializer(mSerializeListener, response, objectMapper));
+                serializers.add(new JacksonJrSerializer(mSerializeListener, response));
                 serializers.add(new LoganSquareSerializer(mSerializeListener, response));
                 serializers.add(new MoshiSerializer(mSerializeListener, response, moshi));
+
             }
         }
 
@@ -150,7 +149,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (parser instanceof GsonParser) {
             mBarChart.addTiming(section, 0, parseResult.runDuration / 1000f);
-        } else if (parser instanceof JacksonDatabindParser) {
+        } else if (parser instanceof JacksonJrParser) {
             mBarChart.addTiming(section, 1, parseResult.runDuration / 1000f);
         } else if (parser instanceof LoganSquareParser) {
             mBarChart.addTiming(section, 2, parseResult.runDuration / 1000f);
@@ -181,7 +180,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (serializer instanceof GsonSerializer) {
             mBarChart.addTiming(section, 0, serializeResult.runDuration / 1000f);
-        } else if (serializer instanceof JacksonDatabindSerializer) {
+        } else if (serializer instanceof JacksonJrSerializer) {
             mBarChart.addTiming(section, 1, serializeResult.runDuration / 1000f);
         } else if (serializer instanceof LoganSquareSerializer) {
             mBarChart.addTiming(section, 2, serializeResult.runDuration / 1000f);

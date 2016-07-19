@@ -2,7 +2,6 @@ package com.bluelinelabs.logansquare.demo.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -11,9 +10,8 @@ import java.util.List;
 public class User {
 
     @SerializedName("_id") // Annotation needed for GSON
-    @JsonProperty("_id")
     @JsonField(name = "_id")
-    public String id;
+    public String _id;
 
     @JsonField
     public int index;
@@ -22,17 +20,15 @@ public class User {
     public String guid;
 
     @SerializedName("is_active") // Annotation needed for GSON
-    @JsonProperty("is_active") // Annotation needed for Jackson Databind
     @JsonField(name = "is_active")
-    public boolean isActive;
+    public boolean is_Active;
 
     @JsonField
     public String balance;
 
     @SerializedName("picture") // Annotation needed for GSON
-    @JsonProperty("picture") // Annotation needed for Jackson Databind
     @JsonField(name = "picture")
-    public String pictureUrl;
+    public String picture;
 
     @JsonField
     public int age;
@@ -77,14 +73,12 @@ public class User {
     public String greeting;
 
     @SerializedName("favorite_fruit") // Annotation needed for GSON
-    @JsonProperty("favorite_fruit") // Annotation needed for Jackson Databind
     @JsonField(name = "favorite_fruit")
-    public String favoriteFruit;
+    public String favorite_fruit;
 
     @SerializedName("eye_color") // Annotation needed for GSON
-    @JsonProperty("eye_color") // Annotation needed for Jackson Databind
     @JsonField(name = "eye_color")
-    public String eyeColor;
+    public String eye_color;
 
     @JsonField
     public String phone;
