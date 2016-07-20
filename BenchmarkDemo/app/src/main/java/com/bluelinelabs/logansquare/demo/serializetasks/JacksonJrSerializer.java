@@ -1,7 +1,5 @@
 package com.bluelinelabs.logansquare.demo.serializetasks;
 
-import android.util.Log;
-
 import com.bluelinelabs.logansquare.demo.model.Response;
 import com.fasterxml.jackson.jr.ob.JSON;
 
@@ -17,7 +15,6 @@ public class JacksonJrSerializer extends Serializer {
     protected String serialize(Response response) {
         try {
             String ret = JSON.std.asString(response);
-            Log.d("TAG", "ret: "  + ret);
         } catch (IOException e) {
             e.printStackTrace();
         }
